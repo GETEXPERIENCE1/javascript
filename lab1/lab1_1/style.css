@@ -1,0 +1,207 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(145deg, #e9f0f5 0%, #d9e2ec 100%);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.calculator-card {
+    max-width: 620px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 2rem;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.calculator-card:hover {
+    transform: scale(1.01);
+}
+
+.header {
+    background: #1e466e;
+    padding: 1.6rem 2rem;
+    color: white;
+}
+
+.header h1 {
+    font-size: 1.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header h1::before {
+    content: "🧓";
+    font-size: 2rem;
+}
+
+.header p {
+    margin-top: 0.5rem;
+    opacity: 0.85;
+    font-size: 0.9rem;
+}
+
+.form-container {
+    padding: 2rem 2rem 2rem 2rem;
+}
+
+.input-group {
+    margin-bottom: 1.8rem;
+}
+
+.input-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #1e2f3e;
+    margin-bottom: 0.6rem;
+    font-size: 1rem;
+}
+
+.age-input {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    font-size: 1.1rem;
+    border: 2px solid #cbdae9;
+    border-radius: 1.5rem;
+    background: white;
+    transition: all 0.2s;
+    font-weight: 500;
+    color: #0a2b3e;
+    outline: none;
+}
+
+.age-input:focus {
+    border-color: #1e466e;
+    box-shadow: 0 0 0 3px rgba(30, 70, 110, 0.2);
+}
+
+.hint {
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+    color: #5e7c97;
+}
+
+.radio-group {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    background: #f8fafd;
+    padding: 0.7rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid #e2edf7;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #1f3b4c;
+    font-size: 1rem;
+}
+
+.radio-option input {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: #1e466e;
+    cursor: pointer;
+}
+
+.btn-calc {
+    background: #1e466e;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 2.5rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 8px 16px -6px rgba(0, 20, 40, 0.2);
+}
+
+.btn-calc:hover {
+    background: #0f3557;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.25);
+}
+
+.btn-calc:active {
+    transform: translateY(1px);
+}
+
+.result-area label {
+    display: block;
+    font-weight: 600;
+    color: #1e2f3e;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 1.2rem;
+    border: 2px solid #cbdae9;
+    background: #fefefe;
+    font-family: 'Segoe UI', monospace;
+    resize: vertical;
+    font-weight: 500;
+    color: #0a2b3e;
+    line-height: 1.4;
+}
+
+textarea:focus {
+    border-color: #1e466e;
+    outline: none;
+    background: #ffffff;
+}
+
+.info-hint {
+    font-size: 0.75rem;
+    color: #5e7c97;
+    margin-top: 1rem;
+    text-align: center;
+    border-top: 1px solid #e2edf7;
+    padding-top: 1.2rem;
+}
+
+footer {
+    background: #f1f6fa;
+    padding: 0.8rem;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #4a6f8f;
+    border-top: 1px solid #e0edf5;
+}
+
+@media (max-width: 500px) {
+    .form-container {
+        padding: 1.5rem;
+    }
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    .radio-group {
+        gap: 1rem;
+    }
+}
