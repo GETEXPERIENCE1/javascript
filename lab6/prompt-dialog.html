@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 5 - Модальное окно</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            min-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .modal-buttons button {
+            padding: 8px 20px;
+        }
+        .modal-buttons button:last-child {
+            background: #f44336;
+        }
+        .modal-buttons button:last-child:hover {
+            background: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💬 Модальное окно с вводом</h1>
+        <button id="showPromptBtn">Показать диалог</button>
+        <div id="result" style="margin-top: 20px; padding: 10px; background: #e8f4f8; border-radius: 5px;"></div>
+    </div>
+
+    <script>
+        function showPrompt(html, callback) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            
+            const message = document.createElement('div');
+            message.innerHTML = html;
+            message.style.marginBottom = '15px';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = 'Введите значение...';
+            
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'modal-buttons';
+            
+            const okBtn = document.createElement('button');
+            okBtn.textContent = 'OK';
+            okBtn.style.background = '#4CAF50';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'ОТМЕНА';
+            
+            buttonsDiv.appendChild(okBtn);
+            buttonsDiv.appendChild(cancelBtn);
+            
+            modal.appendChild(message);
+            modal.appendChild(input);
+            modal.appendChild(buttonsDiv);
+            overlay.appendChild(modal);
+            
+            document.body.appendChild(overlay);
+            
+            function closeModal(value) {
+                overlay.remove();
+                callback(value);
+            }
+            
+            okBtn.addEventListener('click', () => closeModal(input.value));
+            cancelBtn.addEventListener('click', () => closeModal(null));
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    closeModal(input.value);
+                } else if (e.key === 'Escape') {
+                    closeModal(null);
+                }
+            });
+            
+            const focusable = modal.querySelectorAll('input, button');
+            const firstFocus = focusable[0];
+            const lastFocus = focusable[focusable.length - 1];
+            
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocus) {
+                            e.preventDefault();
+                            lastFocus.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocus) {
+                            e.preventDefault();
+                            firstFocus.focus();
+                        }
+                    }
+                }
+            });
+            
+            input.focus();
+        }
+
+        document.getElementById('showPromptBtn').addEventListener('click', () => {
+            showPrompt('Введите что-нибудь<br><strong>умное:</strong>', (value) => {
+                const resultDiv = document.getElementById('result');
+                if (value !== null) {
+                    resultDiv.innerHTML = `✅ Вы ввели: "${value}"`;
+                } else {
+                    resultDiv.innerHTML = `❌ Ввод отменён`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
