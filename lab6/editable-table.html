@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 4 - Редактируемая таблица</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        td:hover {
+            background: #e8f4f8;
+        }
+        .editing-cell {
+            background: #fff3cd;
+        }
+        .edit-controls {
+            margin-top: 5px;
+        }
+        .edit-controls button {
+            margin-right: 5px;
+            padding: 4px 12px;
+            cursor: pointer;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px;
+            font-family: inherit;
+            font-size: inherit;
+            resize: none;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Редактируемая таблица</h1>
+        <table id="editableTable">
+            <tr>
+                <td>Ячейка 1</td>
+                <td>Ячейка 2</td>
+                <td>Ячейка 3</td>
+            </tr>
+            <tr>
+                <td>Ячейка 4</td>
+                <td>Ячейка 5</td>
+                <td>Ячейка 6</td>
+            </tr>
+            <tr>
+                <td>Ячейка 7</td>
+                <td>Ячейка 8</td>
+                <td>Ячейка 9</td>
+            </tr>
+        </table>
+        <div class="info">
+            💡 Кликни на любую ячейку → редактируй → OK (сохранить) или Отмена
+        </div>
+    </div>
+
+    <script>
+        let editingCell = null;
+        let textarea = null;
+        let controlsDiv = null;
+        let originalContent = '';
+
+        function cancelEdit() {
+            if (editingCell && textarea && controlsDiv) {
+                editingCell.innerHTML = originalContent;
+                editingCell.classList.remove('editing-cell');
+                editingCell = null;
+            }
+        }
+
+        function saveEdit() {
+            if (editingCell && textarea && controlsDiv) {
+                editingCell.innerHTML = textarea.value;
+                editingCell.classList.remove('editing-cell');
+                editingCell = null;
+            }
+        }
+
+        function startEdit(cell) {
+            if (editingCell) return;
+            
+            editingCell = cell;
+            originalContent = cell.innerHTML;
+            
+            cell.classList.add('editing-cell');
+            cell.innerHTML = '';
+            
+            textarea = document.createElement('textarea');
+            textarea.value = originalContent;
+            textarea.rows = 3;
+            
+            controlsDiv = document.createElement('div');
+            controlsDiv.className = 'edit-controls';
+            
+            const okBtn = document.createElement('button');
+            okBtn.textContent = 'OK';
+            okBtn.style.background = '#4CAF50';
+            okBtn.style.color = 'white';
+            okBtn.onclick = () => saveEdit();
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Отмена';
+            cancelBtn.style.background = '#f44336';
+            cancelBtn.style.color = 'white';
+            cancelBtn.onclick = () => cancelEdit();
+            
+            controlsDiv.appendChild(okBtn);
+            controlsDiv.appendChild(cancelBtn);
+            
+            cell.appendChild(textarea);
+            cell.appendChild(controlsDiv);
+            textarea.focus();
+        }
+
+        const table = document.getElementById('editableTable');
+        table.addEventListener('click', function(e) {
+            const cell = e.target.closest('td');
+            if (!cell) return;
+            if (editingCell) return;
+            startEdit(cell);
+        });
+    </script>
+</body>
+</html>
