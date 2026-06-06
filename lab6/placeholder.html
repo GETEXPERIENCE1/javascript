@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 2 - Плейсхолдер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .input-container {
+            position: relative;
+            margin: 30px 0 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .placeholder {
+            color: #0066cc;
+            font-style: italic;
+        }
+        .hint {
+            position: absolute;
+            top: -22px;
+            left: 5px;
+            font-size: 12px;
+            color: #4CAF50;
+            display: none;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Плейсхолдер-подсказка</h1>
+        <div class="input-container">
+            <input type="text" id="myInput" data-placeholder="Введите ваше имя...">
+            <div class="hint" id="hint"></div>
+        </div>
+        <p>💡 При фокусе подсказка появляется над полем, при потере фокуса — возвращается в поле, если поле пустое.</p>
+    </div>
+
+    <script>
+        'use strict';
+
+        const input = document.getElementById('myInput');
+        const hint = document.getElementById('hint');
+        const placeholderText = input.getAttribute('data-placeholder');
+        
+        input.value = placeholderText;
+        input.classList.add('placeholder');
+        
+        input.addEventListener('focus', function() {
+            hint.textContent = placeholderText;
+            hint.style.display = 'block';
+            
+            if (this.value === placeholderText) {
+                this.value = '';
+                this.classList.remove('placeholder');
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            hint.style.display = 'none';
+            
+            if (this.value === '') {
+                this.value = placeholderText;
+                this.classList.add('placeholder');
+            }
+        });
+    </script>
+</body>
+</html>
