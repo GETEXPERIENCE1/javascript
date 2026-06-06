@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Шахматная доска</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        .chessboard {
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin: 0 auto;
+        }
+        .chessboard td {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .chessboard th {
+            width: 60px;
+            height: 30px;
+            font-weight: normal;
+            color: #555;
+        }
+        .light {
+            background-color: #ffce9e;
+        }
+        .dark {
+            background-color: #d18b47;
+        }
+        .letter-col, .number-col {
+            background-color: #f0f0f0;
+            border: none;
+        }
+        .piece {
+            font-size: 32px;
+            display: inline-block;
+        }
+        .white-piece {
+            color: white;
+            text-shadow: 0 0 2px black;
+        }
+        .black-piece {
+            color: #222;
+            text-shadow: 0 0 1px white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>♜ Шахматная доска ♞</h1>
+        <table class="chessboard" id="chessboard">
+            <script>
+                const pieces = {
+                    'a8': '♜', 'b8': '♞', 'c8': '♝', 'd8': '♛', 'e8': '♚', 'f8': '♝', 'g8': '♞', 'h8': '♜',
+                    'a7': '♟', 'b7': '♟', 'c7': '♟', 'd7': '♟', 'e7': '♟', 'f7': '♟', 'g7': '♟', 'h7': '♟',
+                    'a1': '♖', 'b1': '♘', 'c1': '♗', 'd1': '♕', 'e1': '♔', 'f1': '♗', 'g1': '♘', 'h1': '♖',
+                    'a2': '♙', 'b2': '♙', 'c2': '♙', 'd2': '♙', 'e2': '♙', 'f2': '♙', 'g2': '♙', 'h2': '♙'
+                };
+                const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+                const board = document.getElementById('chessboard');
+                
+                let topRow = document.createElement('tr');
+                topRow.appendChild(document.createElement('th'));
+                for (let i = 0; i < 8; i++) {
+                    let th = document.createElement('th');
+                    th.textContent = letters[i];
+                    th.className = 'letter-col';
+                    topRow.appendChild(th);
+                }
+                topRow.appendChild(document.createElement('th'));
+                board.appendChild(topRow);
+                
+                for (let row = 8; row >= 1; row--) {
+                    const tr = document.createElement('tr');
+                    const thLeft = document.createElement('th');
+                    thLeft.textContent = row;
+                    thLeft.className = 'number-col';
+                    tr.appendChild(thLeft);
+                    
+                    for (let col = 0; col < 8; col++) {
+                        const td = document.createElement('td');
+                        const letter = letters[col];
+                        const cellKey = letter + row;
+                        const isDark = (row + col) % 2 === 0;
+                        td.className = isDark ? 'dark' : 'light';
+                        
+                        if (pieces[cellKey]) {
+                            const pieceSpan = document.createElement('span');
+                            pieceSpan.textContent = pieces[cellKey];
+                            pieceSpan.className = 'piece';
+                            if (row <= 2) {
+                                pieceSpan.classList.add('white-piece');
+                            } else {
+                                pieceSpan.classList.add('black-piece');
+                            }
+                            td.appendChild(pieceSpan);
+                        }
+                        tr.appendChild(td);
+                    }
+                    
+                    const thRight = document.createElement('th');
+                    thRight.textContent = row;
+                    thRight.className = 'number-col';
+                    tr.appendChild(thRight);
+                    board.appendChild(tr);
+                }
+                
+                let bottomRow = document.createElement('tr');
+                bottomRow.appendChild(document.createElement('th'));
+                for (let i = 0; i < 8; i++) {
+                    let th = document.createElement('th');
+                    th.textContent = letters[i];
+                    th.className = 'letter-col';
+                    bottomRow.appendChild(th);
+                }
+                bottomRow.appendChild(document.createElement('th'));
+                board.appendChild(bottomRow);
+            </script>
+        </table>
+    </div>
+</body>
+</html>
