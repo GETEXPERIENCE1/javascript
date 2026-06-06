@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица</title>
+</head>
+<body>
+    <form id="tableForm">
+        <label>Количество строк: <input type="number" id="rows" min="1" required></label>
+        <button type="submit">Рисовать</button>
+    </form>
+
+    <script>
+        'use strict';
+
+        function generateRow(rowIndex) {
+            const animals = ['dog', 'cat'];
+            const row = [];
+            
+            for (let col = 0; col < 6; col++) {
+                let position = (rowIndex * 6 + col) % 5;
+                
+                switch (position) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        row.push('dog');
+                        break;
+                    case 3:
+                    case 4:
+                        row.push('cat');
+                        break;
+                }
+            }
+            
+            return row.join('\t');
+        }
+
+        document.getElementById('tableForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const numRows = parseInt(document.getElementById('rows').value);
+            
+            for (let i = 0; i < numRows; i++) {
+                console.log(generateRow(i));
+            }
+        });
+    </script>
+</body>
+</html>
