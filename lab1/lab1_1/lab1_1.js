@@ -27,7 +27,6 @@
         return "Вам пора на пенсию";
       }
     }
-
     if (gender === "female") {
       if (age >= 18 && age <= 54) {
         return "Вам ещё работать и работать";
@@ -39,7 +38,6 @@
         return "Вам пора на пенсию";
       }
     }
-
     return "Да кто ты такой?";
   }
 
@@ -53,11 +51,12 @@
     if (ageRaw === "") {
       isAgeValid = false;
     } else {
-      const numberAge = Numer(ageRaw);
-      if (!isNan(numberAge) && isFinite(numberAge)) {
-        const flooregAge = Math.floor(numberAge);
-        if (flooregAge >= 0) {
-          ageValue = flooregAge;
+      const numberAge = Number(ageRaw); // ✅ ИСПРАВЛЕНО: было Numer
+      if (!isNaN(numberAge) && isFinite(numberAge)) {
+        // ✅ isNaN, не isNan
+        const flooredAge = Math.floor(numberAge);
+        if (flooredAge >= 0) {
+          ageValue = flooredAge;
           isAgeValid = true;
         }
       }
