@@ -62,7 +62,7 @@
     <div class="container">
         <h1>Редактируемый div</h1>
         <div id="myDiv" class="editable-div" tabindex="0">
-            Нажми <kbd>Ctrl+E</kbd> для редактирования. <kbd>Ctrl+S</kbd> сохранить, <kbd>Esc</kbd> отменить.
+            <!-- содержимое будет загружено из localStorage или установлено по умолчанию -->
         </div>
         <div class="info">
             💡 Кликни на область выше → нажми <kbd>Ctrl+E</kbd> → измени текст → <kbd>Ctrl+S</kbd> или <kbd>Esc</kbd>
@@ -75,33 +75,83 @@
         const div = document.getElementById('myDiv');
         let isEditing = false;
         let originalContent = '';
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'e') {
-                e.preventDefault();
-                
-                if (!isEditing) {
-                    originalContent = div.innerHTML;
-                    const textarea = document.createElement('textarea');
-                    textarea.value = div.innerText;
-                    div.innerHTML = '';
-                    div.appendChild(textarea);
-                    textarea.focus();
-                    isEditing = true;
-                }
+        const STORAGE_KEY = 'editable_div_content';
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved && saved.trim() !== '') {
+                div.innerHTML = saved;
+            } else {
+                div.innerHTML = 'Нажми <kbd>Ctrl+E</kbd> для редактирования. <kbd>Ctrl+S</kbd> сохранить, <kbd>Esc</kbd> отменить.';
             }
-            else if (e.ctrlKey && e.key === 's' && isEditing) {
-                e.preventDefault();
-                
-                const textarea = div.querySelector('textarea');
-                div.innerHTML = textarea.value;
+        }
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, div.innerHTML);
+        }
+
+        function getPlainText() {
+            return div.innerText;
+        }
+
+        function textToHtml(text) {
+            const temp = document.createElement('div');
+            temp.textContent = text;
+            let html = temp.innerHTML;
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }
+
+        function enterEditMode() {
+            if (isEditing) return;
+            originalContent = div.innerHTML;
+            const textarea = document.createElement('textarea');
+            textarea.value = getPlainText();
+            div.innerHTML = '';
+            div.appendChild(textarea);
+            textarea.focus();
+            isEditing = true;
+        }
+
+        function saveAndExit() {
+            if (!isEditing) return;
+            const textarea = div.querySelector('textarea');
+            if (!textarea) {
                 isEditing = false;
+                return;
+            }
+            const newHtml = textToHtml(textarea.value);
+            div.innerHTML = newHtml;
+            saveToStorage();
+            isEditing = false;
+        }
+
+        function cancelAndExit() {
+            if (!isEditing) return;
+            div.innerHTML = originalContent;
+            isEditing = false;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'e' || e.key === 'E')) {
+                e.preventDefault();
+                if (!isEditing) enterEditMode();
+            }
+            else if (e.ctrlKey && (e.key === 's' || e.key === 'S') && isEditing) {
+                e.preventDefault();
+                saveAndExit();
             }
             else if (e.key === 'Escape' && isEditing) {
-                div.innerHTML = originalContent;
-                isEditing = false;
+                e.preventDefault();
+                cancelAndExit();
             }
         });
+
+        div.addEventListener('click', function() {
+            if (!isEditing) div.focus();
+        });
+
+        loadFromStorage();
     </script>
 </body>
 </html>
