@@ -2,48 +2,64 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Считать ворон</title>
+    <title>Ввод числа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        a {
+            display: inline-block;
+            font-size: 18px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        a:hover {
+            background: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <form id="crowsForm">
-        <label>Количество ворон: <input type="number" id="num" required></label>
-        <button type="submit">Считать</button>
-    </form>
+    <h1>Ввод числа</h1>
+    <a href="#" id="getNumberLink">Получить число</a>
 
     <script>
         'use strict';
 
-        function getCrowEnding(num) {
-            const lastDigit = num % 10;
-            const lastTwoDigits = num % 100;
-            
-            if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-                return 'ворон';
-            }
-            
-            switch (lastDigit) {
-                case 1:
-                    return 'ворона';
-                case 2:
-                case 3:
-                case 4:
-                    return 'вороны';
-                default:
-                    return 'ворон';
+        const link = document.getElementById('getNumberLink');
+        const targetUrl = 'https://cortopi.github.io/javascript/';
+
+        function askForNumber() {
+            while (true) {
+                let input = prompt("Введите число, большее 100:");
+                if (input === null) {
+                    return false;
+                }
+                let num = Number(input);
+                if (!isNaN(num) && num > 100) {
+                    return true;
+                }
             }
         }
 
-        document.getElementById('crowsForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const num = parseInt(document.getElementById('num').value);
-            
-            if (!isNaN(num) && num >= 0) {
-                const ending = getCrowEnding(num);
-                alert(`На ветке сидит ${num} ${ending}`);
+        function redirectToIndex() {
+            window.location.href = targetUrl;
+        }
+
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const success = askForNumber();
+            if (success) {
+                redirectToIndex();
             } else {
-                alert('Введите корректное число');
+                const allow = confirm("Вы не ввели число больше 100. Всё равно перейти?");
+                if (allow) {
+                    redirectToIndex();
+                }
             }
         });
     </script>
