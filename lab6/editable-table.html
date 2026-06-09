@@ -59,6 +59,7 @@
     <div class="container">
         <h1>📊 Редактируемая таблица</h1>
         <table id="editableTable">
+            <tbody>
             <tr>
                 <td>Ячейка 1</td>
                 <td>Ячейка 2</td>
@@ -74,6 +75,7 @@
                 <td>Ячейка 8</td>
                 <td>Ячейка 9</td>
             </tr>
+            </tbody>
         </table>
         <div class="info">
             💡 Кликни на любую ячейку → редактируй → OK (сохранить) или Отмена
@@ -85,6 +87,33 @@
         let textarea = null;
         let controlsDiv = null;
         let originalContent = '';
+
+        function saveTableToSession() {
+            const rows = document.querySelectorAll('#editableTable tr');
+            const data = [];
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].querySelectorAll('td');
+                const row = [];
+                for (let j = 0; j < cells.length; j++) row.push(cells[j].innerHTML);
+                data.push(row);
+            }
+            sessionStorage.setItem('tableData', JSON.stringify(data));
+        }
+
+        function loadTableFromSession() {
+            const saved = sessionStorage.getItem('tableData');
+            if (!saved) return;
+            try {
+                const data = JSON.parse(saved);
+                const rows = document.querySelectorAll('#editableTable tr');
+                for (let i = 0; i < rows.length && i < data.length; i++) {
+                    const cells = rows[i].querySelectorAll('td');
+                    for (let j = 0; j < cells.length && j < data[i].length; j++) {
+                        cells[j].innerHTML = data[i][j];
+                    }
+                }
+            } catch(e) {}
+        }
 
         function cancelEdit() {
             if (editingCell && textarea && controlsDiv) {
@@ -99,40 +128,33 @@
                 editingCell.innerHTML = textarea.value;
                 editingCell.classList.remove('editing-cell');
                 editingCell = null;
+                saveTableToSession();
             }
         }
 
         function startEdit(cell) {
             if (editingCell) return;
-            
             editingCell = cell;
             originalContent = cell.innerHTML;
-            
             cell.classList.add('editing-cell');
             cell.innerHTML = '';
-            
             textarea = document.createElement('textarea');
             textarea.value = originalContent;
             textarea.rows = 3;
-            
             controlsDiv = document.createElement('div');
             controlsDiv.className = 'edit-controls';
-            
             const okBtn = document.createElement('button');
             okBtn.textContent = 'OK';
             okBtn.style.background = '#4CAF50';
             okBtn.style.color = 'white';
             okBtn.onclick = () => saveEdit();
-            
             const cancelBtn = document.createElement('button');
             cancelBtn.textContent = 'Отмена';
             cancelBtn.style.background = '#f44336';
             cancelBtn.style.color = 'white';
             cancelBtn.onclick = () => cancelEdit();
-            
             controlsDiv.appendChild(okBtn);
             controlsDiv.appendChild(cancelBtn);
-            
             cell.appendChild(textarea);
             cell.appendChild(controlsDiv);
             textarea.focus();
@@ -141,10 +163,11 @@
         const table = document.getElementById('editableTable');
         table.addEventListener('click', function(e) {
             const cell = e.target.closest('td');
-            if (!cell) return;
-            if (editingCell) return;
+            if (!cell || editingCell) return;
             startEdit(cell);
         });
+
+        loadTableFromSession();
     </script>
 </body>
 </html>
